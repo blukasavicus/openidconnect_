@@ -108,6 +108,26 @@ body {
     transition: color 0.3s;
 }
 
+.google-icon-btn {
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    cursor: pointer;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.google-icon-btn .fab.fa-google {
+    font-size: 1.5rem;
+    color: #1D6DCD;
+    transition: color 0.3s;
+}
+
+.google-icon-btn:hover .fab.fa-google {
+    color: #F1AF09;
+}
+
 .icons i:hover {
     color: #F1AF09;
 }

@@ -1,38 +1,156 @@
-# Login com Firebase e OpenID Connect
- 
-Este repositório contém um exemplo prático e completo de uma aplicação web de login e cadastro, utilizando o Firebase para autenticação e o Firestore para gerenciar dados de usuários. O projeto foi desenvolvido para demonstrar a utilização de autenticação e autorização com OpenID Connect.
- 
-## Tecnologias Utilizadas
- 
-Firebase Authentication: Para gerenciar o processo de login e cadastro de usuários, incluindo métodos de autenticação por e-mail e senha.
-Cloud Firestore: Um banco de dados NoSQL utilizado para armazenar informações adicionais do usuário (nome, sobrenome, e-mail) de forma segura.
-HTML, CSS e JavaScript: A base para a interface do usuário e a lógica de front-end. O estilo da página é responsivo e tem um design limpo e moderno.
- 
-## Funcionalidades Principais
- 
-O projeto inclui as seguintes funcionalidades:
-Cadastro de Usuário: Permite que novos usuários criem uma conta usando nome, sobrenome, e-mail e senha. Uma mensagem de erro é exibida se o e-mail já estiver em uso.
-Login de Usuário: Permite que usuários existentes façam login com suas credenciais. O ID do usuário autenticado é salvo no localStorage.
-Página Inicial (Homepage): Após o login, o usuário é redirecionado para uma página que exibe seus dados (nome, sobrenome e e-mail) buscados do Firestore.
-Logout: O usuário pode sair da conta, o que remove o ID do usuário do localStorage e o redireciona para a página de login.
-Navegação Dinâmica: A interface alterna entre os formulários de login e cadastro de forma fluida, controlada pelo JavaScript.
- 
-## Como Iniciar
- 
-Configurar o Firebase: Crie um projeto no console do Firebase e habilite o Firebase Authentication (E-mail/Senha) e o Cloud Firestore.
-Obter as Chaves de Configuração: Adicione um aplicativo web ao seu projeto Firebase para obter o objeto de configuração (firebaseConfig).
-Atualizar os Arquivos: Substitua as strings vazias no firebaseauth.js e homepage.js com as suas chaves de configuração do Firebase.
-Executar o Projeto: Abra o arquivo index.html em seu navegador.
- 
-## Estrutura do Projeto
- 
-index.html: Página principal com os formulários de login e cadastro.
-homepage.html: Página exibida após o login, mostrando os dados do usuário.
-firebaseauth.js: Contém a lógica de autenticação e interação com o Firestore para cadastro e login.
-homepage.js: Gerencia o estado de autenticação do usuário e busca seus dados para exibição na página inicial.
-script.js: Controla a exibição e ocultação dos formulários de login e cadastro.
-style.css: Folha de estilo para a interface da aplicação.
- 
-## Licença
- 
-Este projeto é distribuído sob a Licença Pública Geral GNU v3.0.
+Sistema de Autenticação
+Este projeto implementa um sistema completo de autenticação utilizando Firebase Authentication com dois métodos de login: email/senha e Google OAuth.
+
+📋 Funcionalidades Implementadas
+🔐 Login com Email e Senha
+Cadastro de novos usuários: Validação de dados e criação de conta
+
+Login de usuários existentes: Autenticação segura com tratamento de erros
+
+Armazenamento de dados: Salvamento de informações do usuário no Firestore
+
+Persistência de sessão: Uso de localStorage para manter o usuário logado
+
+🔵 Login com Google OAuth
+Autenticação social: Integração com contas Google
+
+Popup de login: Interface amigável para autenticação
+
+Salvamento automático: Dados do usuário são automaticamente salvos no Firestore
+
+Tratamento de erros: Mensagens específicas para diferentes tipos de erro
+
+🛠️ Tecnologias Utilizadas
+Firebase Authentication: Para gerenciamento de autenticação
+
+Firebase Firestore: Para armazenamento de dados do usuário
+
+Google OAuth: Para autenticação social
+
+JavaScript ES6+: Para lógica do frontend
+
+HTML5 e CSS3: Para interface do usuário
+
+📁 Estrutura do Projeto
+text
+├── index.html          # Página principal com formulários de login/cadastro
+├── style.css           # Estilos da aplicação
+├── script.js           # Lógica principal de autenticação
+├── homepage.html       # Página após login bem-sucedido
+└── README.md          # Esta documentação
+🔧 Implementação Técnica
+Configuração do Firebase
+javascript
+const firebaseConfig = {
+    apiKey: "sua-api-key",
+    authDomain: "seu-projeto.firebaseapp.com",
+    projectId: "seu-projeto",
+    storageBucket: "seu-projeto.appspot.com",
+    messagingSenderId: "seu-sender-id",
+    appId: "seu-app-id"
+};
+Método de Login com Email/Senha
+javascript
+// Cadastro
+createUserWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+        // Salva dados no Firestore
+        const userData = { email, firstName, lastName };
+        const docRef = doc(db, "users", user.uid);
+        setDoc(docRef, userData);
+    });
+
+// Login
+signInWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+        localStorage.setItem('loggedInUserId', user.uid);
+        window.location.href = 'homepage.html';
+    });
+Método de Login com Google
+javascript
+const signInWithGoogle = async () => {
+    const provider = new GoogleAuthProvider();
+    provider.addScope('email');
+    provider.addScope('profile');
+    
+    const result = await signInWithPopup(auth, provider);
+    const user = result.user;
+    
+    // Salva dados do usuário do Google
+    const userData = {
+        email: user.email,
+        firstName: user.displayName?.split(' ')[0],
+        lastName: user.displayName?.split(' ')[1],
+        photoURL: user.photoURL,
+        provider: 'google'
+    };
+    
+    await setDoc(doc(db, "users", user.uid), userData, { merge: true });
+};
+🎨 Interface do Usuário
+Formulários
+Design responsivo: Adaptável a diferentes tamanhos de tela
+
+Validação visual: Campos com labels flutuantes
+
+Feedback visual: Mensagens de erro/sucesso temporárias
+
+Animações: Transições suaves e efeitos hover
+
+Elementos de UI
+Campos de formulário: Com ícones e validação
+
+Botões estilizados: Com efeitos de hover e focus
+
+Ícones FontAwesome: Para melhor experiência visual
+
+Gradiente de fundo: Design moderno e atraente
+
+⚡ Funcionalidades de Segurança
+Validação de email: Verificação de formato correto
+
+Tratamento de erros: Mensagens específicas para cada tipo de erro
+
+Persistência segura: Uso de localStorage apenas para ID do usuário
+
+Firebase Security Rules: Proteção dos dados no Firestore
+
+🚀 Como Usar
+Cadastro: Preencha nome, email e senha no formulário de cadastro
+
+Login com email: Use email e senha cadastrados
+
+Login com Google: Clique no ícone do Google para autenticação social
+
+Redirecionamento: Após login bem-sucedido, será redirecionado para homepage
+
+🔍 Tratamento de Erros
+O sistema trata diversos cenários de erro:
+
+auth/email-already-in-use: Email já cadastrado
+
+auth/invalid-credential: Credenciais incorretas
+
+auth/popup-closed-by-user: Popup fechado pelo usuário
+
+auth/network-request-failed: Problema de conexão
+
+📱 Responsividade
+A interface é totalmente responsiva com media queries para:
+
+Dispositivos móveis (até 600px)
+
+Tablets (601px - 900px)
+
+Desktop (acima de 900px)
+
+🔄 Fluxo de Autenticação
+Usuário preenche formulário ou clica no Google
+
+Dados são validados e enviados para Firebase
+
+Em caso de sucesso, dados são salvos no Firestore
+
+ID do usuário é armazenado no localStorage
+
+Redirecionamento para página principal
